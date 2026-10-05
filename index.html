@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="International Academy 2026-2027 calendar tracker showing A day, B day, weekend, PA, holidays, and the next school days."
+    />
+    <title>International Academy 2026-2027 Calendar</title>
+    <style>
+      :root {
+        --bg: #f7f8fb;
+        --panel: #ffffff;
+        --panel-2: #eef4ff;
+        --ink: #1b2b3c;
+        --muted: #5d6e82;
+        --line: #dfe7f2;
+        --a: #ffffff;
+        --b: #dfeeff;
+        --weekend: #dfe5eb;
+        --pa: #f7e7c8;
+        --holiday: #e7ecf3;
+        --na: #f2f2f2;
+        --primary: #0d2d52;
+        --primary-2: #1f5e9d;
+        --shadow: 0 18px 40px rgba(15, 37, 61, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #f8fbff 0%, #f3f5f8 100%);
+        color: var(--ink);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 22px 48px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px 0 12px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        min-width: 0;
+      }
+
+      .ia-logo {
+        width: 118px;
+        height: 86px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #102c55 0%, #1d4d77 100%);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .ia-logo::before {
+        content: "";
+        position: absolute;
+        inset: 8px 14px 8px 14px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+      }
+
+      .ia-mark {
+        position: relative;
+        width: 72px;
+        height: 52px;
+        transform: rotate(-8deg);
+      }
+
+      .ia-mark::before,
+      .ia-mark::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #c8dff9 0%, #7bb5ff 100%);
+        clip-path: polygon(0 0, 22% 0, 22% 100%, 0 100%);
+      }
+
+      .ia-mark::after {
+        left: 22%;
+        width: 56%;
+        background: linear-gradient(180deg, #eaf3ff 0%, #9cc2f2 100%);
+        clip-path: polygon(52% 0, 100% 0, 100% 100%, 52% 100%);
+      }
+
+      .ia-mark span {
+        position: absolute;
+        left: 32%;
+        top: 2%;
+        width: 36%;
+        height: 92%;
+        border-radius: 8px;
+        background: linear-gradient(180deg, #153b69 0%, #0a273f 100%);
+        transform: skew(-18deg);
+        box-shadow: inset 0 0 18px rgba(255,255,255,0.24);
+      }
+
+      .brand-copy {
+        min-width: 0;
+      }
+
+      .eyebrow {
+        display: block;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 1.2rem + 1vw, 2.5rem);
+        letter-spacing: 0.03em;
+        color: var(--primary);
+      }
+
+      .pdf-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 18px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #1d4d77 0%, #163a5c 100%);
+        border: 1px solid rgba(13,45,82,0.08);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        box-shadow: 0 10px 18px rgba(22, 58, 92, 0.12);
+      }
+
+      .pdf-button:hover,
+      .pdf-button:focus-visible {
+        filter: brightness(1.06);
+      }
+
+      main {
+        padding-top: 18px;
+      }
+
+      .date-strip {
+        display: grid;
+        grid-template-columns: 62px minmax(0, 1fr) 62px;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .nav-button {
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.8);
+        color: var(--primary);
+        width: 56px;
+        height: 220px;
+        border-radius: 18px;
+        font-size: 2.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 22px rgba(15, 37, 61, 0.06);
+        transition: transform 0.14s ease, box-shadow 0.14s ease;
+      }
+
+      .nav-button:hover,
+      .nav-button:focus-visible {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 28px rgba(15, 37, 61, 0.09);
+      }
+
+      .day-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        position: relative;
+        min-height: 260px;
+        padding: 20px 18px 18px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 10px;
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      .card.a {
+        background: linear-gradient(180deg, #ffffff 0%, #f7f9fb 100%);
+      }
+
+      .card.b {
+        background: linear-gradient(180deg, #edf6ff 0%, #dfeeff 100%);
+      }
+
+      .card.weekend {
+        background: linear-gradient(180deg, #edf1f5 0%, #dde5eb 100%);
+      }
+
+      .card.pa {
+        background: linear-gradient(180deg, #fffaf0 0%, #f8ebd2 100%);
+      }
+
+      .card.holiday {
+        background: linear-gradient(180deg, #f4f7fb 0%, #ebf1f8 100%);
+      }
+
+      .card.na {
+        background: linear-gradient(180deg, #f4f5f7 0%, #eceff3 100%);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .pill.a,
+      .pill.b,
+      .pill.weekend,
+      .pill.pa,
+      .pill.holiday,
+      .pill.na {
+        color: var(--ink);
+      }
+
+      .pill.a {
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(13,45,82,0.12);
+      }
+
+      .pill.b {
+        background: rgba(125, 180, 255, 0.22);
+        border: 1px solid rgba(29, 77, 119, 0.14);
+      }
+
+      .pill.weekend {
+        background: rgba(112,124,140,0.12);
+        border: 1px solid rgba(94,106,119,0.12);
+      }
+
+      .pill.pa {
+        background: rgba(245, 189, 74, 0.2);
+        border: 1px solid rgba(164, 109, 15, 0.16);
+      }
+
+      .pill.holiday {
+        background: rgba(113, 138, 175, 0.14);
+        border: 1px solid rgba(77, 96, 125, 0.14);
+      }
+
+      .pill.na {
+        background: rgba(119,128,138,0.12);
+        border: 1px solid rgba(107, 118, 130, 0.14);
+      }
+
+      .weekday {
+        margin-top: 18px;
+        font-size: 0.78rem;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .date-big {
+        margin-top: 8px;
+        font-size: clamp(2rem, 1.8rem + 0.6vw, 3rem);
+        line-height: 1.1;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .date-full {
+        margin-top: 8px;
+        font-size: 0.95rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .status-note {
+        margin-top: 18px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(25,40,54,0.12);
+        color: var(--ink);
+        font-size: 1.02rem;
+        line-height: 1.5;
+      }
+
+      .status-note strong {
+        font-weight: 800;
+      }
+
+      .empty-state {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: rgba(13,45,82,0.04);
+        border: 1px solid rgba(13,45,82,0.08);
+        color: var(--muted);
+      }
+
+      @media (max-width: 760px) {
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .brand {
+          width: 100%;
+        }
+
+        .pdf-button {
+          align-self: flex-end;
+        }
+
+        .date-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-button {
+          width: 100%;
+          height: 54px;
+        }
+
+        .day-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="topbar">
+        <div class="brand" aria-label="International Academy">
+          <div class="ia-logo" aria-hidden="true">
+            <div class="ia-mark"><span></span></div>
+          </div>
+          <div class="brand-copy">
+            <span class="eyebrow">Tri-Campus Calendar</span>
+            <h1>International Academy</h1>
+          </div>
+        </div>
+
+        <a
+          class="pdf-button"
+          href="https://resources.finalsite.net/images/v1768908846/troyk12mius/xwhqqshmfketoobejrtm/2026-2027IATri-CampusGraphicCalendarwithABDays.pdf"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Open the official International Academy 2026 to 2027 calendar PDF"
+        >
+          Calendar PDF
+        </a>
+      </header>
+
+      <main>
+        <div class="date-strip">
+          <button id="prevBtn" class="nav-button" type="button" aria-label="Show previous day">&#8592;</button>
+
+          <section class="day-cards" id="dayCards" aria-live="polite" aria-label="Three-day calendar preview"></section>
+
+          <button id="nextBtn" class="nav-button" type="button" aria-label="Show next day">&#8594;</button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const schoolYearStart = new Date("2026-08-17T00:00:00");
+      const schoolYearEnd = new Date("2027-06-18T00:00:00");
+      let offset = 0;
+
+      const blueDays = new Set([
+        "2026-08-20","2026-08-24","2026-08-26","2026-08-28",
+        "2026-09-01","2026-09-03","2026-09-09","2026-09-11","2026-09-15","2026-09-17","2026-09-21","2026-09-25","2026-09-29",
+        "2026-10-01","2026-10-05","2026-10-07","2026-10-09","2026-10-13","2026-10-15","2026-10-19","2026-10-21","2026-10-27",
+        "2026-11-05","2026-11-09","2026-11-11","2026-11-13","2026-11-17","2026-11-19","2026-11-23","2026-11-30",
+        "2026-12-02","2026-12-04","2026-12-08","2026-12-10","2026-12-14","2026-12-16","2026-12-18",
+        "2027-01-05","2027-01-07","2027-01-11","2027-01-13","2027-01-20","2027-01-22","2027-01-26","2027-01-28",
+        "2027-02-01","2027-02-03","2027-02-05","2027-02-09","2027-02-11","2027-02-22","2027-02-24","2027-02-26",
+        "2027-03-02","2027-03-04","2027-03-09","2027-03-11","2027-03-15","2027-03-17","2027-03-19","2027-03-23","2027-03-25",
+        "2027-04-06","2027-04-08","2027-04-12","2027-04-14","2027-04-16","2027-04-20","2027-04-22","2027-04-28","2027-04-30",
+        "2027-05-04","2027-05-06","2027-05-10","2027-05-12","2027-05-14","2027-05-18","2027-05-20","2027-05-24","2027-05-26","2027-05-28",
+        "2027-06-02","2027-06-04","2027-06-08","2027-06-09","2027-06-10","2027-06-17"
+      ]);
+
+      const holidayDates = new Set([
+        "2026-09-04","2026-09-07",
+        "2026-11-25","2026-11-26","2026-11-27",
+        "2026-12-21","2026-12-22","2026-12-23","2026-12-24","2026-12-25","2026-12-26","2026-12-27","2026-12-28","2026-12-29","2026-12-30","2026-12-31",
+        "2027-01-01",
+        "2027-02-15","2027-02-16","2027-02-17","2027-02-18","2027-02-19",
+        "2027-03-26","2027-03-29","2027-03-30","2027-03-31",
+        "2027-04-01","2027-04-02",
+        "2027-05-31"
+      ]);
+
+      const paDates = new Set([
+        "2026-08-17","2026-08-18",
+        "2026-09-23",
+        "2026-10-23","2026-10-29",
+        "2026-11-02","2026-11-03",
+        "2027-01-15",
+        "2027-03-01",
+        "2027-04-08",
+        "2027-04-26",
+        "2027-06-09","2027-06-10"
+      ]);
+
+      function isoDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+
+      function startOfDay(date) {
+        const next = new Date(date);
+        next.setHours(0, 0, 0, 0);
+        return next;
+      }
+
+      function getCalendarStatus(date) {
+        const normalized = startOfDay(date);
+
+        if (normalized < schoolYearStart || normalized > schoolYearEnd) {
+          return { type: "na", label: "N/A", note: "Outside the school calendar" };
+        }
+
+        const iso = isoDate(normalized);
+        const dayOfWeek = normalized.getDay();
+
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+          return { type: "weekend", label: "Weekend", note: "No school" };
+        }
+
+        if (holidayDates.has(iso)) {
+          return { type: "holiday", label: "Holiday", note: "No school" };
+        }
+
+        if (paDates.has(iso)) {
+          return { type: "pa", label: "PA", note: "Professional activity / non-student day" };
+        }
+
+        if (blueDays.has(iso)) {
+          return { type: "b", label: "B Day", note: "Regular school day" };
+        }
+
+        return { type: "a", label: "A Day", note: "Regular school day" };
+      }
+
+      function formatDate(date) {
+        return date.toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        });
+      }
+
+      function createCard(date, status) {
+        const card = document.createElement("article");
+        card.className = `card ${status.type}`;
+
+        const badge = document.createElement("div");
+        badge.className = `pill ${status.type}`;
+        badge.textContent = status.label;
+
+        const weekday = document.createElement("div");
+        weekday.className = "weekday";
+        weekday.textContent = date.toLocaleDateString("en-US", { weekday: "long" });
+
+        const dayNumber = document.createElement("div");
+        dayNumber.className = "date-big";
+        dayNumber.textContent = date.getDate();
+
+        const fullDate = document.createElement("div");
+        fullDate.className = "date-full";
+        fullDate.textContent = date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+        const note = document.createElement("div");
+        note.className = "status-note";
+        note.innerHTML = `<strong>${status.label}</strong> — ${status.note}`;
+
+        card.appendChild(badge);
+        card.appendChild(weekday);
+        card.appendChild(dayNumber);
+        card.appendChild(fullDate);
+        card.appendChild(note);
+        return card;
+      }
+
+      function renderCards() {
+        const cardsContainer = document.getElementById("dayCards");
+        cardsContainer.innerHTML = "";
+
+        const current = startOfDay(new Date());
+
+        for (let i = 0; i < 3; i += 1) {
+          const date = new Date(current);
+          date.setDate(current.getDate() + offset + i);
+          const status = getCalendarStatus(date);
+          const card = createCard(date, status);
+          cardsContainer.appendChild(card);
+        }
+      }
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        offset -= 1;
+        renderCards();
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        offset += 1;
+        renderCards();
+      });
+
+      renderCards();
+    </script>
+  </body>
+</html>
